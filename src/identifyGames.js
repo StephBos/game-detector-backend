@@ -1,29 +1,10 @@
-import dotenv from 'dotenv';
-import { GoogleGenAI } from '@google/genai'
+require('dotenv').config()
+const { GoogleGenAI } = require('@google/genai')
+const client = new GoogleGenAI({ apiKey: process.env.GOOGLE_KEY })
 
-dotenv.config()
-const client = new GenAI({ apiKey: process.env.GOOGLE_KEY });
-
-chrome.runtime.onMessage.addListener(async function (
-   request,
-   sender,
-   sendResponse
-) {
-   console.log('Background Service Worker received message:', request)
-
-   // Use the 'type' field to handle different messages
-   if (request.type === 'GET_GAME_TITLE_FROM_VIDEO_DETAILS') {
-      const videoId = request.videoId
-      const identifiedGames = await identifyGameFromVideoDetails(videoId)
-      const mappedGames = await mapGames(identifiedGames)
-
-      console.log(`Background Service Worker received new Video ID: ${videoId}`)
-      sendResponse({ title: identifiedGames.title })
-   }
-
-   // This is necessary if you use sendResponse asynchronously
-   return true
-})
+async function identifyGame(reqBody) {
+   const videoDetails = await getVideoById(reqBody.videoId)
+}
 
 async function identifyGameFromVideoDetails(videoId) {
    const videoDetails = await getVideoById(videoId)
@@ -33,25 +14,11 @@ async function identifyGameFromVideoDetails(videoId) {
    )
 }
 
-async function identifyGameFromTitle(videoTitle) {
-   const prompt = `Identify the main video game mentioned in the following video title: "${videoTitle}". Respond with just the name of the game. If no game is mentioned, respond with "No game found".`
-   const response = await client.generate({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-   })
-
-   console.log('AI Response:', response)
-
-   return {
-      id: videoId,
-      title: 'Example Game Title from background',
-      description: 'This is a description of the example game.',
-   }
-}
-
 async function getVideoById(videoId) {
+   console.log('Getting video by ID:', videoId)
+   console.log('Using YouTube API Key:', process.env.GOOGLE_KEY)
    const partsToRetrieve = 'snippet,contentDetails,statistics'
-   const url = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=${partsToRetrieve}&key=${YOUTUBE_API_KEY}`
+   const url = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=${partsToRetrieve}&key=${process.env.GOOGLE_KEY}`
    console.log(`Fetching video data from URL: ${url}`)
 
    try {
@@ -87,8 +54,4 @@ async function getVideoById(videoId) {
    }
 }
 
-async function mapGames(identifiedGames) {
-   // Placeholder function to map identified games to a database or API
-   console.log('Mapping identified games:', identifiedGames)
-   return identifiedGames
-}
+module.exports = { identifyGame }
