@@ -1,6 +1,7 @@
-const express = require('express')
+import express from 'express'
+import { identifyGame } from '../src/identifyGames.js'
+
 const router = express.Router()
-const { identifyGame } = require('../src/identifyGames')
 
 router.post('/', async (req, res) => {
    console.log('req.body:', req.body)
@@ -14,4 +15,4 @@ router.post('/', async (req, res) => {
    }
 })
 
-module.exports = router
+export default router

@@ -1,7 +1,7 @@
-require('dotenv').config()
-const express = require('express')
-const cors = require('cors')
-const gameRoutes = require('./routes/gameRoutes')
+import 'dotenv/config'
+import express from 'express'
+import cors from 'cors'
+import gameRoutes from './routes/gameRoutes.js'
 
 const app = express()
 

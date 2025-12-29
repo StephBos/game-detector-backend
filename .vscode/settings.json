@@ -18,5 +18,8 @@
         "titleBar.inactiveBackground": "#484e7399",
         "titleBar.inactiveForeground": "#e7e7e799"
     },
-    "peacock.color": "#484E73"
+    "peacock.color": "#484E73",
+    "cSpell.words": [
+        "applist"
+    ]
 }
